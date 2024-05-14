@@ -4,20 +4,20 @@ from django.http import JsonResponse,HttpResponse
 from django.forms.models import model_to_dict
 from products.models import Product
 
-# Create your views here.
-# def api_home(request,*args,**kwargs):
-#     print(request.GET)
-#     body = request.body
-#     data = {}
-#     try:
-#         data = json.loads(body)
-#     except:
-#         pass
-#     print(data.keys())
-#     data['params'] = dict(request.GET)
-#     data['headers'] = dict(request.headers)
-#     data['content_type'] = request.content_type
-#     return JsonResponse(data)
+#Create your views here.
+def api_home(request,*args,**kwargs):
+    print(request.GET)
+    body = request.body
+    data = {}
+    try:
+        data = json.loads(body)
+    except:
+        pass
+    print(data.keys())
+    data['params'] = dict(request.GET)
+    data['headers'] = dict(request.headers)
+    data['content_type'] = request.content_type
+    return JsonResponse(data)
 
 # @api_view(["GET"])
 def api_home(request, *args, **kwargs):
