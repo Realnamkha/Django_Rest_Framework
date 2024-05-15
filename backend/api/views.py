@@ -39,10 +39,18 @@ from products.serializers import ProductSerializer
 #     return HttpResponse(json_data,headers={"content-type":"application/json"})
 
 
-@api_view(["GET"])
+# @api_view(["GET"])
+# def api_home(request, *args, **kwargs):
+#     instance = Product.objects.all().order_by("?").first()
+#     data = {}
+#     if instance:
+#         data = ProductSerializer(instance).data
+#     return Response(data)
+
+@api_view(["POST"])
 def api_home(request, *args, **kwargs):
-    instance = Product.objects.all().order_by("?").first()
-    data = {}
-    if instance:
-        data = ProductSerializer(instance).data
-    return Response(data)
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid():
+        # instance = serializer.save()
+        print(serializer.data)
+        return Response(serializer.data)
