@@ -1,26 +1,28 @@
-from rest_framework import generics,mixins
+from rest_framework import generics,mixins,permissions,authentication
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Product
 from .serializers import ProductSerializer
+from .permissions import IsStaffEditorPermission
 
-# class ProductListCreateAPIView(generics.ListCreateAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
+class ProductListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAdminUser,IsStaffEditorPermission]
 
-    # def perform_create(self,serializer):
-    #     # serializer.save(user=self.request.user)
-    #     print(serializer)
-    #     serializer.save()
-    #     # title = serializer.validated_data.get('title')
-    #     # content = serializer.validated_data.get('content') or None
-    #     # if content is None:
-    #     #     content = title
-    #     # serializer.save(content=content)
+    def perform_create(self, serializer):
+        # serializer.save(user=self.request.user)
+        title = serializer.validated_data.get('title')
+        content = serializer.validated_data.get('content') or None
+        if content is None:
+            content = title
+        serializer.save(content=content)
+        # send a Django signal
 
 
-# product_listcreate_view = ProductListCreateAPIView.as_view()
+product_list_create_view = ProductListCreateAPIView.as_view()
 
 class ProductMixinView(mixins.CreateModelMixin,mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,
                        mixins.DestroyModelMixin,generics.GenericAPIView):
